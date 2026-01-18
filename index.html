@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>馬卡龍語法挑戰：V下來特輯</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* 自定義動畫 */
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(5%); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 2s infinite;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .animate-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-blue-50 font-sans text-gray-700 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- 遊戲容器 -->
+    <div id="game-container" class="bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden border-4 border-blue-100 relative min-h-[600px] flex flex-col">
+        
+        <!-- 動態內容區 -->
+        <div id="app-content" class="flex-1 flex flex-col">
+            <!-- 內容將由 JavaScript 動態插入 -->
+        </div>
+
+    </div>
+
+    <!-- JavaScript 邏輯 -->
+    <script>
+        // 題目資料 (依照最新狀態)
+        const quizData = [
+            {
+                id: 1,
+                type: 'choice',
+                question: '孔子的思想非常偉大，一直被______到現在，影響了許多人。(L15)',
+                options: ['記下來', '買下來', '停下來', '脫下來'],
+                answer: '記下來',
+                explanation: '「記下來」表示時間的延續，從過去記到現在。'
+            },
+            {
+                id: 2,
+                type: 'fill',
+                question: '這部筆電的功能很多，價格又打折，所以我決定把它______。(L13)',
+                answer: '買下來',
+                explanation: '「買下來」表示通過購買這個動作，將東西固定歸自己所有。'
+            },
+            {
+                id: 3,
+                type: 'rearrange',
+                question: '重組句子：(L16)',
+                words: ['把', '拍下來', '我', '表演', '了'],
+                answer: '我把表演拍下來了',
+                explanation: '「拍下來」表示透過拍照/錄影將畫面固定/記錄下來。'
+            },
+            {
+                id: 4,
+                type: 'choice',
+                question: '孔子和學生經過路邊，看到兩個小孩在吵架，就決定______看看發生了什麼事。(L15)',
+                options: ['停下來', '記下來', '暗下來', '買下來'],
+                answer: '停下來',
+                explanation: '「停下來」表示動作的終止，從原本的移動狀態變為靜止。'
+            },
+            {
+                id: 5,
+                type: 'fill',
+                question: '上課的時候，如果有不懂的問題，你應該先把它______，下課再問老師。(L15)',
+                answer: '記下來',
+                accept: ['記下來', '寫下來'],
+                explanation: '「記下來」或「寫下來」，表示將資訊固定在紙上或腦海中。'
+            },
+            {
+                id: 6,
+                type: 'rearrange',
+                question: '重組句子：(L14)',
+                words: ['停下來', '嚇得', '大家都', '了'],
+                answer: '大家都嚇得停下來了',
+                explanation: '「停下來」表示狀態的改變。'
+            },
+            {
+                id: 7,
+                type: 'choice',
+                question: '走了好久的路，我們找一張椅子______休息一下吧。',
+                options: ['坐下來', '跳下來', '跑下來', '買下來'],
+                answer: '坐下來',
+                explanation: '「坐下來」是基本的趨向補語，表示身體由高往低（坐姿）的動作。'
+            },
+            {
+                id: 8,
+                type: 'fill',
+                question: '表演結束後，良介把穿了一整天的傳統服裝______，覺得輕鬆多了。(L16)',
+                answer: '脫下來',
+                explanation: '「脫下來」表示將穿戴在身上的物品取下，使其脫離身體。'
+            },
+            {
+                id: 9,
+                type: 'rearrange',
+                question: '重組句子：(L13/L16)',
+                words: ['請', '把', '牆上的', '拿下來', '畫'],
+                answer: '請把牆上的畫拿下來',
+                explanation: '「拿下來」表示使物體脫離原本附著的地方。'
+            },
+            {
+                id: 10,
+                type: 'choice',
+                question: '這台筆電雖然很好，但是太貴了，我必須先把錢______才買得起。(L13)',
+                options: ['存下來', '靜下來', '暗下來', '脫下來'],
+                answer: '存下來',
+                explanation: '「存下來」表示把錢保留著、積蓄起來，屬於「固定、保留」的用法。'
+            }
+        ];
+
+        // 遊戲狀態
+        let currentState = 'start'; // start, playing, result
+        let currentQIndex = 0;
+        let score = 0;
+        let userAnswer = '';
+        let feedback = null; // { type: 'correct' | 'wrong', msg: '' }
+        let rearrangeWords = []; // 用於重組題的詞彙庫
+
+        const appContent = document.getElementById('app-content');
+        const container = document.getElementById('game-container');
+
+        // 初始化
+        function init() {
+            renderStart();
+            lucide.createIcons();
+        }
+
+        // 渲染：開始畫面
+        function renderStart() {
+            container.className = "bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden border-4 border-yellow-100 mx-auto";
+            appContent.innerHTML = `
+                <div class="bg-gradient-to-r from-pink-200 to-yellow-200 p-8 text-center relative overflow-hidden">
+                    <div class="absolute top-2 left-2 animate-bounce-slow"><i data-lucide="star" class="text-white w-8 h-8 fill-current"></i></div>
+                    <div class="absolute bottom-2 right-2 animate-pulse"><i data-lucide="heart" class="text-white w-8 h-8 fill-current"></i></div>
+                    <h1 class="text-3xl font-bold text-pink-500 tracking-wider mb-2 drop-shadow-sm">馬卡龍語法挑戰</h1>
+                    <h2 class="text-xl text-yellow-600 font-medium bg-white/50 inline-block px-4 py-1 rounded-full">V下來 特輯</h2>
+                </div>
+                <div class="p-8 flex flex-col items-center space-y-6">
+                    <p class="text-center text-gray-500 leading-relaxed">
+                        結合 L13~L16 生詞，複習「V下來」的各種用法。<br/>
+                        準備好接受挑戰了嗎？
+                    </p>
+                    
+                    <div class="flex space-x-4">
+                        <div class="relative transform -rotate-12">
+                            <div class="w-16 h-8 rounded-t-full bg-pink-300 opacity-90"></div>
+                            <div class="w-16 h-3 bg-white opacity-80 my-[-2px] mx-auto rounded-sm relative z-10"></div>
+                            <div class="w-16 h-8 rounded-b-full bg-pink-300 opacity-90"></div>
+                        </div>
+                        <div class="relative transform rotate-12">
+                            <div class="w-16 h-8 rounded-t-full bg-green-200 opacity-90"></div>
+                            <div class="w-16 h-3 bg-white opacity-80 my-[-2px] mx-auto rounded-sm relative z-10"></div>
+                            <div class="w-16 h-8 rounded-b-full bg-green-200 opacity-90"></div>
+                        </div>
+                        <div class="relative transform -rotate-6">
+                            <div class="w-16 h-8 rounded-t-full bg-yellow-300 opacity-90"></div>
+                            <div class="w-16 h-3 bg-white opacity-80 my-[-2px] mx-auto rounded-sm relative z-10"></div>
+                            <div class="w-16 h-8 rounded-b-full bg-yellow-300 opacity-90"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="startGame()" class="w-full bg-pink-400 hover:bg-pink-500 text-white text-xl font-bold py-4 rounded-2xl shadow-lg transform transition hover:scale-105 flex items-center justify-center gap-2">
+                        <i data-lucide="play" class="w-6 h-6 fill-current"></i>
+                        開始遊戲
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // 開始遊戲
+        function startGame() {
+            score = 0;
+            currentQIndex = 0;
+            currentState = 'playing';
+            container.className = "bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden border-4 border-blue-100 relative min-h-[600px] flex flex-col mx-auto";
+            renderGame();
+        }
+
+        // 渲染：遊戲主畫面
+        function renderGame() {
+            const currentQuiz = quizData[currentQIndex];
+            const progress = ((currentQIndex + 1) / quizData.length) * 100;
+
+            // 初始化重組題文字
+            if (currentQuiz.type === 'rearrange' && userAnswer === '') {
+                 // 隨機打亂
+                rearrangeWords = [...currentQuiz.words].sort(() => Math.random() - 0.5);
+            }
+
+            let inputAreaHTML = '';
+
+            // 根據題型生成輸入區域
+            if (currentQuiz.type === 'choice') {
+                inputAreaHTML = `<div class="grid grid-cols-1 gap-3">
+                    ${currentQuiz.options.map(option => `
+                        <button onclick="handleAnswer('${option}')" 
+                            class="p-4 rounded-xl text-left font-medium transition-all duration-200 border-2 bg-gray-50 border-gray-100 hover:bg-blue-50 hover:border-blue-200 text-gray-600">
+                            ${option}
+                        </button>
+                    `).join('')}
+                </div>`;
+            } else if (currentQuiz.type === 'fill') {
+                inputAreaHTML = `
+                    <div class="space-y-4">
+                        <input type="text" id="fill-input" 
+                            placeholder="請輸入答案 (例如：買下來)"
+                            class="w-full p-4 text-lg border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-400 bg-blue-50"
+                        />
+                        <button onclick="handleFillAnswer()" 
+                            class="w-full bg-blue-400 text-white py-3 rounded-xl font-bold hover:bg-blue-500 transition shadow-md">
+                            確認答案
+                        </button>
+                    </div>`;
+            } else if (currentQuiz.type === 'rearrange') {
+                inputAreaHTML = `
+                    <div class="space-y-6">
+                        <!-- 答案顯示區 -->
+                        <div class="min-h-[60px] p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-wrap items-center gap-2 text-lg font-bold text-gray-700">
+                            ${userAnswer ? userAnswer : '<span class="text-gray-400 font-normal text-base">點擊下方詞語組成句子...</span>'}
+                        </div>
+                        
+                        <!-- 詞語按鈕區 -->
+                        <div class="flex flex-wrap gap-2">
+                            ${rearrangeWords.map(word => `
+                                <button onclick="handleRearrangeClick('${word}')" 
+                                    class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg font-medium shadow-sm hover:bg-purple-200 active:scale-95 transition">
+                                    ${word}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button onclick="resetRearrange()" class="flex-1 bg-gray-200 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-300 transition">
+                                重置
+                            </button>
+                            <button onclick="handleAnswer(userAnswer)" class="flex-1 bg-purple-400 text-white py-3 rounded-xl font-bold hover:bg-purple-500 transition shadow-md">
+                                確認
+                            </button>
+                        </div>
+                    </div>`;
+            }
+
+            // 標題圖標
+            const titleIcon = currentQuiz.type === 'rearrange' 
+                ? `<i data-lucide="music" class="w-5 h-5 inline text-purple-500 mr-2"></i>` 
+                : '';
+
+            // 主體 HTML
+            appContent.innerHTML = `
+                <!-- 進度條 -->
+                <div class="h-4 bg-gray-100 w-full">
+                    <div class="h-full bg-gradient-to-r from-pink-300 via-yellow-300 to-green-300 transition-all duration-500 ease-out" style="width: ${progress}%"></div>
+                </div>
+
+                <!-- 標頭 -->
+                <div class="p-6 flex justify-between items-center bg-white border-b border-gray-100">
+                    <div class="flex items-center gap-2">
+                        <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-bold">Q${currentQIndex + 1}</span>
+                        <span class="text-gray-400 text-sm">/ ${quizData.length}</span>
+                    </div>
+                    <div class="font-bold text-pink-500 text-xl flex items-center gap-1">
+                         Score: ${score}
+                    </div>
+                </div>
+
+                <!-- 題目區域 -->
+                <div class="p-6 flex-1 flex flex-col">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 leading-relaxed mb-4">
+                            ${titleIcon}${currentQuiz.type === 'rearrange' ? '請重組句子：' : currentQuiz.question}
+                        </h3>
+                        ${inputAreaHTML}
+                    </div>
+                </div>
+            `;
+            
+            // 重新渲染圖標
+            lucide.createIcons();
+            
+            // 如果是填空題，恢復之前的輸入(如果有)
+            if(currentQuiz.type === 'fill' && document.getElementById('fill-input')) {
+                // document.getElementById('fill-input').focus();
+            }
+        }
+
+        // 處理重組題點擊
+        function handleRearrangeClick(word) {
+            userAnswer = userAnswer ? userAnswer + word : word;
+            // 從可選詞中移除
+            rearrangeWords = rearrangeWords.filter(w => w !== word);
+            renderGame();
+        }
+
+        // 重置重組題
+        function resetRearrange() {
+            const currentQuiz = quizData[currentQIndex];
+            userAnswer = '';
+            rearrangeWords = [...currentQuiz.words];
+            renderGame();
+        }
+
+        // 處理填空題提交
+        function handleFillAnswer() {
+            const input = document.getElementById('fill-input');
+            handleAnswer(input.value.trim());
+        }
+
+        // 處理回答邏輯
+        function handleAnswer(answer) {
+            const currentQuiz = quizData[currentQIndex];
+            let isCorrect = false;
+
+            if (currentQuiz.type === 'choice') {
+                isCorrect = answer === currentQuiz.answer;
+            } else if (currentQuiz.type === 'fill') {
+                isCorrect = answer === currentQuiz.answer || (currentQuiz.accept && currentQuiz.accept.includes(answer));
+            } else if (currentQuiz.type === 'rearrange') {
+                // 移除標點符號進行比較
+                const cleanUser = answer.replace(/[，。、]/g, '');
+                const cleanAns = currentQuiz.answer.replace(/[，。、]/g, '');
+                isCorrect = cleanUser === cleanAns;
+            }
+
+            if (isCorrect) {
+                score += 10;
+                showFeedback('correct', '太棒了！答對了！ ' + currentQuiz.explanation);
+            } else {
+                showFeedback('wrong', `哎呀！正確答案是「${currentQuiz.answer}」。 ${currentQuiz.explanation}`);
+            }
+        }
+
+        // 顯示回饋 Modal
+        function showFeedback(type, msg) {
+            // 先移除可能存在的舊 Modal (安全檢查)
+            const existingModal = document.getElementById('feedback-modal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = "feedback-modal"; // 加入 ID 以便移除
+            modal.className = "absolute inset-0 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-8 z-20 animate-fade-in";
+            
+            const icon = type === 'correct' ? '🎉' : '🤔';
+            const titleColor = type === 'correct' ? 'text-green-600' : 'text-red-500';
+            const titleText = type === 'correct' ? '答對了！' : '差一點點！';
+            const animation = type === 'correct' ? 'animate-bounce-slow' : 'animate-shake';
+
+            modal.innerHTML = `
+                <div class="text-6xl mb-4 ${animation}">${icon}</div>
+                <h3 class="text-2xl font-bold mb-2 ${titleColor}">${titleText}</h3>
+                <p class="text-gray-600 text-center mb-8 leading-relaxed max-w-xs text-lg">
+                    ${msg}
+                </p>
+                <button onclick="nextQuestion()" class="px-8 py-3 bg-gray-800 text-white rounded-full font-bold text-lg hover:bg-gray-900 transition flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    下一題 <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            `;
+            
+            container.appendChild(modal);
+            lucide.createIcons();
+        }
+
+        // 下一題
+        function nextQuestion() {
+            // 移除回饋視窗
+            const modal = document.getElementById('feedback-modal');
+            if (modal) {
+                modal.remove();
+            }
+
+            if (currentQIndex < quizData.length - 1) {
+                currentQIndex++;
+                userAnswer = ''; // 重置用戶答案
+                rearrangeWords = [];
+                renderGame();
+            } else {
+                renderResult();
+            }
+        }
+
+        // 渲染：結果畫面
+        function renderResult() {
+            container.className = "bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden border-4 border-green-100 mx-auto p-8 text-center";
+            
+            let message = '';
+            let msgClass = '';
+            if (score === 100) {
+                message = '太厲害了！語法大師！🏆';
+                msgClass = 'bg-yellow-100 text-yellow-700';
+            } else if (score >= 60) {
+                message = '做得不錯！繼續加油！✨';
+                msgClass = 'bg-green-100 text-green-700';
+            } else {
+                message = '再試一次會更好！💪';
+                msgClass = 'bg-pink-100 text-pink-700';
+            }
+
+            appContent.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full">
+                    <i data-lucide="trophy" class="w-24 h-24 text-yellow-400 mx-auto mb-6 fill-current"></i>
+                    <h2 class="text-3xl font-bold text-gray-700 mb-2">挑戰完成！</h2>
+                    <p class="text-gray-500 mb-6">你的馬卡龍語法分數</p>
+                    
+                    <div class="text-6xl font-black text-pink-500 mb-8 drop-shadow-sm">
+                        ${score}<span class="text-2xl text-gray-400 ml-2">/ 100</span>
+                    </div>
+
+                    <div class="mb-8">
+                        <span class="${msgClass} px-4 py-2 rounded-lg text-lg font-bold block w-full shadow-sm">${message}</span>
+                    </div>
+
+                    <button onclick="init()" class="w-full bg-green-400 hover:bg-green-500 text-white text-xl font-bold py-4 rounded-2xl shadow-lg transform transition hover:scale-105 flex items-center justify-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+                        再玩一次
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        // 啟動應用
+        init();
+
+    </script>
+</body>
+</html>
