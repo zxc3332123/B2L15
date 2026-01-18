@@ -3,446 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>馬卡龍語法挑戰：V下來特輯</title>
-    <!-- 引入 Tailwind CSS -->
+    <title>時代華語 2 - 語法學習指南</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* 自定義動畫 */
-        @keyframes bounce-slow {
-            0%, 100% { transform: translateY(-5%); }
-            50% { transform: translateY(5%); }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
         }
-        .animate-bounce-slow {
-            animation: bounce-slow 2s infinite;
+        .hero-pattern {
+            background-color: #3b82f6;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-        .animate-fade-in {
-            animation: fadeIn 0.3s ease-out;
+        .grammar-card {
+            transition: all 0.3s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        .grammar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        .animate-shake {
-            animation: shake 0.5s ease-in-out;
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
     </style>
 </head>
-<body class="bg-blue-50 font-sans text-gray-700 min-h-screen flex flex-col items-center justify-center p-4">
+<body class="text-slate-700 flex flex-col min-h-screen">
 
-    <!-- 遊戲容器 -->
-    <div id="game-container" class="bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden border-4 border-blue-100 relative min-h-[600px] flex flex-col">
-        
-        <!-- 動態內容區 -->
-        <div id="app-content" class="flex-1 flex flex-col">
-            <!-- 內容將由 JavaScript 動態插入 -->
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center gap-2 text-blue-600">
+                        <i class="fa-solid fa-book-open text-2xl"></i>
+                        <span class="font-bold text-xl tracking-wide">時代華語 II 語法網</span>
+                    </a>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="#" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">首頁</a>
+                        <a href="#lessons" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">課程列表</a>
+                        <a href="#grammar-index" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">語法總表</a>
+                        <a href="#about" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">關於本書</a>
+                    </div>
+                </div>
+                <div class="flex items-center sm:hidden">
+                    <!-- Mobile menu button -->
+                    <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
         </div>
 
+        <!-- Mobile Menu -->
+        <div class="hidden sm:hidden bg-white border-t" id="mobile-menu">
+            <div class="pt-2 pb-4 space-y-1">
+                <a href="#" class="bg-blue-50 border-blue-500 text-blue-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">首頁</a>
+                <a href="#lessons" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">課程列表</a>
+                <a href="#grammar-index" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">語法總表</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-pattern text-white">
+        <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-4">
+                掌握《時代華語 2》核心語法
+            </h1>
+            <p class="mt-4 text-xl text-blue-100 max-w-2xl mx-auto">
+                專為華語學習者設計的語法筆記。從基本句型到複雜結構，幫助您更流利地使用中文溝通。
+            </p>
+            
+            <!-- Search Bar -->
+            <div class="mt-8 w-full max-w-lg relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                </div>
+                <input type="text" id="searchInput" class="block w-full pl-10 pr-3 py-4 border border-transparent rounded-full leading-5 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-white focus:border-white sm:text-lg shadow-lg" placeholder="搜尋語法（例如：把、被、起來...）">
+            </div>
+            <p class="mt-2 text-sm text-blue-200">嘗試搜尋：第5課、把字句、租房子</p>
+        </div>
     </div>
 
-    <!-- JavaScript 邏輯 -->
+    <!-- Daily Grammar Highlight -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+        <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col md:flex-row items-center justify-between border-l-4 border-yellow-400">
+            <div class="flex items-start gap-4 mb-4 md:mb-0">
+                <div class="bg-yellow-100 p-3 rounded-full text-yellow-600">
+                    <i class="fa-solid fa-lightbulb text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">今日重點語法：V + 下去</h3>
+                    <p class="text-gray-600 mt-1">表示動作繼續進行。 <br><span class="text-sm text-gray-500 italic">例句：這本書太好看了，我要繼續看下去。</span></p>
+                </div>
+            </div>
+            <button onclick="window.location.href='#lesson-8'" class="whitespace-nowrap px-6 py-2 border border-transparent text-sm font-medium rounded-full text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none transition">
+                查看詳情
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        
+        <!-- Features/Stats -->
+        <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-16">
+            <div class="bg-white overflow-hidden shadow rounded-lg px-4 py-5 sm:p-6 text-center">
+                <dt class="text-sm font-medium text-gray-500 truncate">收錄課程</dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">16 課</dd>
+            </div>
+            <div class="bg-white overflow-hidden shadow rounded-lg px-4 py-5 sm:p-6 text-center">
+                <dt class="text-sm font-medium text-gray-500 truncate">語法重點</dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">80+ 個</dd>
+            </div>
+            <div class="bg-white overflow-hidden shadow rounded-lg px-4 py-5 sm:p-6 text-center">
+                <dt class="text-sm font-medium text-gray-500 truncate">例句庫</dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">300+ 句</dd>
+            </div>
+            <div class="bg-white overflow-hidden shadow rounded-lg px-4 py-5 sm:p-6 text-center">
+                <dt class="text-sm font-medium text-gray-500 truncate">難度等級</dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">A2 - B1</dd>
+            </div>
+        </section>
+
+        <div class="flex items-center justify-between mb-8" id="lessons">
+            <h2 class="text-2xl font-bold text-gray-900 border-l-4 border-blue-500 pl-3">課程單元選單</h2>
+            
+            <!-- Filter Dropdown -->
+            <select id="topicFilter" class="block w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border bg-white shadow-sm">
+                <option value="all">所有主題</option>
+                <option value="life">日常生活</option>
+                <option value="travel">旅遊交通</option>
+                <option value="school">校園學習</option>
+                <option value="work">工作社交</option>
+            </select>
+        </div>
+
+        <!-- Lesson Grid Container -->
+        <div id="lessonGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Content will be injected by JS -->
+        </div>
+
+        <!-- No results state -->
+        <div id="noResults" class="hidden text-center py-20">
+            <i class="fa-regular fa-face-frown text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900">找不到相關語法或課程</h3>
+            <p class="mt-1 text-gray-500">請嘗試使用不同的關鍵字搜尋。</p>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white mt-auto">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">時代華語 II 語法網</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        本網站旨在協助學習者複習《時代華語》第二冊的語法重點。內容僅供學術交流與輔助學習使用。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">快速連結</h3>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">TOCFL 華語文能力測驗</a></li>
+                        <li><a href="#" class="hover:text-white transition">教育部國語辭典</a></li>
+                        <li><a href="#" class="hover:text-white transition">線上練習題庫</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">聯絡我們</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-slate-400 hover:text-white"><i class="fa-brands fa-facebook text-2xl"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-white"><i class="fa-brands fa-instagram text-2xl"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-white"><i class="fa-brands fa-github text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-slate-700 pt-8 text-center text-slate-500 text-sm">
+                &copy; 2023 Chinese Grammar Study. All rights reserved. 非官方網站。
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Dynamic Content -->
     <script>
-        // 題目資料 (依照最新狀態)
-        const quizData = [
+        // Mock Data based on typical Modern Chinese Book 2 curriculum
+        const lessonsData = [
             {
                 id: 1,
-                type: 'choice',
-                question: '孔子的思想非常偉大，一直被______到現在，影響了許多人。(L15)',
-                options: ['記下來', '買下來', '停下來', '脫下來'],
-                answer: '記下來',
-                explanation: '「記下來」表示時間的延續，從過去記到現在。'
+                title: "這件衣服很適合你",
+                topic: "life", // For filtering
+                desc: "購買衣物、顏色與尺寸的表達",
+                grammar: [
+                    { pattern: "V + 著", desc: "表示狀態持續 (穿著、戴著)" },
+                    { pattern: "有點 + Adj", desc: "表示不滿意或負面評價" },
+                    { pattern: "一點也/都 + 不/沒", desc: "完全否定" },
+                    { pattern: "像...一樣", desc: "比喻與比較" }
+                ],
+                color: "bg-red-50 text-red-700 border-red-200"
             },
             {
                 id: 2,
-                type: 'fill',
-                question: '這部筆電的功能很多，價格又打折，所以我決定把它______。(L13)',
-                answer: '買下來',
-                explanation: '「買下來」表示通過購買這個動作，將東西固定歸自己所有。'
+                title: "你要租什麼樣的房子",
+                topic: "life",
+                desc: "租屋需求、詢問環境與設施",
+                grammar: [
+                    { pattern: "連...都...", desc: "強調極端的情況" },
+                    { pattern: "V + 不下", desc: "空間容納不下" },
+                    { pattern: "對...滿意", desc: "表達對某事物的看法" },
+                    { pattern: "為了...", desc: "表示目的" }
+                ],
+                color: "bg-orange-50 text-orange-700 border-orange-200"
             },
             {
                 id: 3,
-                type: 'rearrange',
-                question: '重組句子：(L16)',
-                words: ['把', '拍下來', '我', '表演', '了'],
-                answer: '我把表演拍下來了',
-                explanation: '「拍下來」表示透過拍照/錄影將畫面固定/記錄下來。'
+                title: "去郵局怎麼走",
+                topic: "travel",
+                desc: "問路、方向與距離",
+                grammar: [
+                    { pattern: "往...走/轉", desc: "指示方向" },
+                    { pattern: "離...很近/遠", desc: "描述距離" },
+                    { pattern: "從...到...", desc: "起點與終點" },
+                    { pattern: "V + 過", desc: "經過某地" }
+                ],
+                color: "bg-amber-50 text-amber-700 border-amber-200"
             },
             {
                 id: 4,
-                type: 'choice',
-                question: '孔子和學生經過路邊，看到兩個小孩在吵架，就決定______看看發生了什麼事。(L15)',
-                options: ['停下來', '記下來', '暗下來', '買下來'],
-                answer: '停下來',
-                explanation: '「停下來」表示動作的終止，從原本的移動狀態變為靜止。'
+                title: "我要寄這兩個包裹",
+                topic: "life",
+                desc: "郵局辦事、寄信與包裹",
+                grammar: [
+                    { pattern: "把 + O + V...", desc: "處置式 (把信寄了)" },
+                    { pattern: "順便", desc: "做主要動作時附帶做某事" },
+                    { pattern: "有的...有的...", desc: "列舉群體中的部分" },
+                    { pattern: "除了...以外", desc: "包含或排除" }
+                ],
+                color: "bg-green-50 text-green-700 border-green-200"
             },
             {
                 id: 5,
-                type: 'fill',
-                question: '上課的時候，如果有不懂的問題，你應該先把它______，下課再問老師。(L15)',
-                answer: '記下來',
-                accept: ['記下來', '寫下來'],
-                explanation: '「記下來」或「寫下來」，表示將資訊固定在紙上或腦海中。'
+                title: "我若是你就去看醫生",
+                topic: "life",
+                desc: "生病症狀、看醫生建議",
+                grammar: [
+                    { pattern: "看起來", desc: "視覺推測" },
+                    { pattern: "最好", desc: "提出建議" },
+                    { pattern: "被 + O + V...", desc: "被動語態" },
+                    { pattern: "若是/如果...就...", desc: "假設語氣" }
+                ],
+                color: "bg-teal-50 text-teal-700 border-teal-200"
             },
             {
                 id: 6,
-                type: 'rearrange',
-                question: '重組句子：(L14)',
-                words: ['停下來', '嚇得', '大家都', '了'],
-                answer: '大家都嚇得停下來了',
-                explanation: '「停下來」表示狀態的改變。'
+                title: "去哪裡旅行好",
+                topic: "travel",
+                desc: "討論旅行計畫、風景",
+                grammar: [
+                    { pattern: "不但...而且...", desc: "遞進關係" },
+                    { pattern: "比...更...", desc: "比較級的加強" },
+                    { pattern: "V + 得/不 + 了", desc: "可能補語 (去得了)" },
+                    { pattern: "先...再...", desc: "動作順序" }
+                ],
+                color: "bg-sky-50 text-sky-700 border-sky-200"
             },
             {
                 id: 7,
-                type: 'choice',
-                question: '走了好久的路，我們找一張椅子______休息一下吧。',
-                options: ['坐下來', '跳下來', '跑下來', '買下來'],
-                answer: '坐下來',
-                explanation: '「坐下來」是基本的趨向補語，表示身體由高往低（坐姿）的動作。'
+                title: "這些菜很有台灣味",
+                topic: "life",
+                desc: "台灣小吃、口味描述",
+                grammar: [
+                    { pattern: "越來越...", desc: "隨時間變化" },
+                    { pattern: "V + 起來", desc: "感官評價 (吃起來)" },
+                    { pattern: "雖然...但是...", desc: "轉折關係" },
+                    { pattern: "值得", desc: "表示有價值" }
+                ],
+                color: "bg-blue-50 text-blue-700 border-blue-200"
             },
             {
                 id: 8,
-                type: 'fill',
-                question: '表演結束後，良介把穿了一整天的傳統服裝______，覺得輕鬆多了。(L16)',
-                answer: '脫下來',
-                explanation: '「脫下來」表示將穿戴在身上的物品取下，使其脫離身體。'
+                title: "參加社團活動",
+                topic: "school",
+                desc: "校園生活、興趣與活動",
+                grammar: [
+                    { pattern: "V + 下去", desc: "動作繼續" },
+                    { pattern: "對...有興趣", desc: "表達興趣" },
+                    { pattern: "到處", desc: "所有地方" },
+                    { pattern: "一...就...", desc: "連貫動作" }
+                ],
+                color: "bg-indigo-50 text-indigo-700 border-indigo-200"
             },
             {
                 id: 9,
-                type: 'rearrange',
-                question: '重組句子：(L13/L16)',
-                words: ['請', '把', '牆上的', '拿下來', '畫'],
-                answer: '請把牆上的畫拿下來',
-                explanation: '「拿下來」表示使物體脫離原本附著的地方。'
-            },
-            {
-                id: 10,
-                type: 'choice',
-                question: '這台筆電雖然很好，但是太貴了，我必須先把錢______才買得起。(L13)',
-                options: ['存下來', '靜下來', '暗下來', '脫下來'],
-                answer: '存下來',
-                explanation: '「存下來」表示把錢保留著、積蓄起來，屬於「固定、保留」的用法。'
+                title: "你打工過嗎",
+                topic: "work",
+                desc: "打工經驗、面試",
+                grammar: [
+                    { pattern: "V + 過", desc: "過去的經驗" },
+                    { pattern: "適合/合適", desc: "形容詞與動詞區別" },
+                    { pattern: "才/就", desc: "時間早晚/容易與否" },
+                    { pattern: "一面...一面...", desc: "同時進行" }
+                ],
+                color: "bg-purple-50 text-purple-700 border-purple-200"
             }
         ];
 
-        // 遊戲狀態
-        let currentState = 'start'; // start, playing, result
-        let currentQIndex = 0;
-        let score = 0;
-        let userAnswer = '';
-        let feedback = null; // { type: 'correct' | 'wrong', msg: '' }
-        let rearrangeWords = []; // 用於重組題的詞彙庫
+        const lessonGrid = document.getElementById('lessonGrid');
+        const searchInput = document.getElementById('searchInput');
+        const topicFilter = document.getElementById('topicFilter');
+        const noResults = document.getElementById('noResults');
 
-        const appContent = document.getElementById('app-content');
-        const container = document.getElementById('game-container');
-
-        // 初始化
-        function init() {
-            renderStart();
-            lucide.createIcons();
-        }
-
-        // 渲染：開始畫面
-        function renderStart() {
-            container.className = "bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden border-4 border-yellow-100 mx-auto";
-            appContent.innerHTML = `
-                <div class="bg-gradient-to-r from-pink-200 to-yellow-200 p-8 text-center relative overflow-hidden">
-                    <div class="absolute top-2 left-2 animate-bounce-slow"><i data-lucide="star" class="text-white w-8 h-8 fill-current"></i></div>
-                    <div class="absolute bottom-2 right-2 animate-pulse"><i data-lucide="heart" class="text-white w-8 h-8 fill-current"></i></div>
-                    <h1 class="text-3xl font-bold text-pink-500 tracking-wider mb-2 drop-shadow-sm">馬卡龍語法挑戰</h1>
-                    <h2 class="text-xl text-yellow-600 font-medium bg-white/50 inline-block px-4 py-1 rounded-full">V下來 特輯</h2>
-                </div>
-                <div class="p-8 flex flex-col items-center space-y-6">
-                    <p class="text-center text-gray-500 leading-relaxed">
-                        結合 L13~L16 生詞，複習「V下來」的各種用法。<br/>
-                        準備好接受挑戰了嗎？
-                    </p>
-                    
-                    <div class="flex space-x-4">
-                        <div class="relative transform -rotate-12">
-                            <div class="w-16 h-8 rounded-t-full bg-pink-300 opacity-90"></div>
-                            <div class="w-16 h-3 bg-white opacity-80 my-[-2px] mx-auto rounded-sm relative z-10"></div>
-                            <div class="w-16 h-8 rounded-b-full bg-pink-300 opacity-90"></div>
-                        </div>
-                        <div class="relative transform rotate-12">
-                            <div class="w-16 h-8 rounded-t-full bg-green-200 opacity-90"></div>
-                            <div class="w-16 h-3 bg-white opacity-80 my-[-2px] mx-auto rounded-sm relative z-10"></div>
-                            <div class="w-16 h-8 rounded-b-full bg-green-200 opacity-90"></div>
-                        </div>
-                        <div class="relative transform -rotate-6">
-                            <div class="w-16 h-8 rounded-t-full bg-yellow-300 opacity-90"></div>
-                            <div class="w-16 h-3 bg-white opacity-80 my-[-2px] mx-auto rounded-sm relative z-10"></div>
-                            <div class="w-16 h-8 rounded-b-full bg-yellow-300 opacity-90"></div>
-                        </div>
+        // Function to create HTML for a grammar tag
+        function createGrammarTag(text, desc) {
+            return `
+                <div class="group relative inline-block">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white border border-gray-200 text-gray-700 mr-2 mb-2 cursor-pointer hover:bg-blue-50 hover:border-blue-200 transition">
+                        ${text}
+                    </span>
+                    <div class="opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-slate-800 text-white text-xs rounded py-1 px-2 text-center transition-all z-20">
+                        ${desc}
+                        <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
                     </div>
-
-                    <button onclick="startGame()" class="w-full bg-pink-400 hover:bg-pink-500 text-white text-xl font-bold py-4 rounded-2xl shadow-lg transform transition hover:scale-105 flex items-center justify-center gap-2">
-                        <i data-lucide="play" class="w-6 h-6 fill-current"></i>
-                        開始遊戲
-                    </button>
                 </div>
             `;
-            lucide.createIcons();
         }
 
-        // 開始遊戲
-        function startGame() {
-            score = 0;
-            currentQIndex = 0;
-            currentState = 'playing';
-            container.className = "bg-white w-full max-w-lg rounded-3xl shadow-xl overflow-hidden border-4 border-blue-100 relative min-h-[600px] flex flex-col mx-auto";
-            renderGame();
-        }
-
-        // 渲染：遊戲主畫面
-        function renderGame() {
-            const currentQuiz = quizData[currentQIndex];
-            const progress = ((currentQIndex + 1) / quizData.length) * 100;
-
-            // 初始化重組題文字
-            if (currentQuiz.type === 'rearrange' && userAnswer === '') {
-                 // 隨機打亂
-                rearrangeWords = [...currentQuiz.words].sort(() => Math.random() - 0.5);
-            }
-
-            let inputAreaHTML = '';
-
-            // 根據題型生成輸入區域
-            if (currentQuiz.type === 'choice') {
-                inputAreaHTML = `<div class="grid grid-cols-1 gap-3">
-                    ${currentQuiz.options.map(option => `
-                        <button onclick="handleAnswer('${option}')" 
-                            class="p-4 rounded-xl text-left font-medium transition-all duration-200 border-2 bg-gray-50 border-gray-100 hover:bg-blue-50 hover:border-blue-200 text-gray-600">
-                            ${option}
-                        </button>
-                    `).join('')}
-                </div>`;
-            } else if (currentQuiz.type === 'fill') {
-                inputAreaHTML = `
-                    <div class="space-y-4">
-                        <input type="text" id="fill-input" 
-                            placeholder="請輸入答案 (例如：買下來)"
-                            class="w-full p-4 text-lg border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-400 bg-blue-50"
-                        />
-                        <button onclick="handleFillAnswer()" 
-                            class="w-full bg-blue-400 text-white py-3 rounded-xl font-bold hover:bg-blue-500 transition shadow-md">
-                            確認答案
-                        </button>
-                    </div>`;
-            } else if (currentQuiz.type === 'rearrange') {
-                inputAreaHTML = `
-                    <div class="space-y-6">
-                        <!-- 答案顯示區 -->
-                        <div class="min-h-[60px] p-4 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-wrap items-center gap-2 text-lg font-bold text-gray-700">
-                            ${userAnswer ? userAnswer : '<span class="text-gray-400 font-normal text-base">點擊下方詞語組成句子...</span>'}
+        // Function to create lesson card
+        function createLessonCard(lesson) {
+            const grammarTags = lesson.grammar.map(g => createGrammarTag(g.pattern, g.desc)).join('');
+            
+            return `
+                <div class="grammar-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full" id="lesson-${lesson.id}">
+                    <div class="p-6 flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${lesson.color}">
+                                第 ${lesson.id} 課
+                            </span>
+                            <span class="text-gray-400 text-sm"><i class="fa-solid fa-tag"></i> ${getTopicName(lesson.topic)}</span>
                         </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">${lesson.title}</h3>
+                        <p class="text-gray-500 text-sm mb-4 line-clamp-2">${lesson.desc}</p>
                         
-                        <!-- 詞語按鈕區 -->
-                        <div class="flex flex-wrap gap-2">
-                            ${rearrangeWords.map(word => `
-                                <button onclick="handleRearrangeClick('${word}')" 
-                                    class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg font-medium shadow-sm hover:bg-purple-200 active:scale-95 transition">
-                                    ${word}
-                                </button>
-                            `).join('')}
+                        <div class="border-t border-gray-100 pt-4">
+                            <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">本課重點語法</h4>
+                            <div class="flex flex-wrap">
+                                ${grammarTags}
+                            </div>
                         </div>
-
-                        <div class="flex gap-2">
-                            <button onclick="resetRearrange()" class="flex-1 bg-gray-200 text-gray-600 py-3 rounded-xl font-bold hover:bg-gray-300 transition">
-                                重置
-                            </button>
-                            <button onclick="handleAnswer(userAnswer)" class="flex-1 bg-purple-400 text-white py-3 rounded-xl font-bold hover:bg-purple-500 transition shadow-md">
-                                確認
-                            </button>
-                        </div>
-                    </div>`;
-            }
-
-            // 標題圖標
-            const titleIcon = currentQuiz.type === 'rearrange' 
-                ? `<i data-lucide="music" class="w-5 h-5 inline text-purple-500 mr-2"></i>` 
-                : '';
-
-            // 主體 HTML
-            appContent.innerHTML = `
-                <!-- 進度條 -->
-                <div class="h-4 bg-gray-100 w-full">
-                    <div class="h-full bg-gradient-to-r from-pink-300 via-yellow-300 to-green-300 transition-all duration-500 ease-out" style="width: ${progress}%"></div>
-                </div>
-
-                <!-- 標頭 -->
-                <div class="p-6 flex justify-between items-center bg-white border-b border-gray-100">
-                    <div class="flex items-center gap-2">
-                        <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-bold">Q${currentQIndex + 1}</span>
-                        <span class="text-gray-400 text-sm">/ ${quizData.length}</span>
                     </div>
-                    <div class="font-bold text-pink-500 text-xl flex items-center gap-1">
-                         Score: ${score}
-                    </div>
-                </div>
-
-                <!-- 題目區域 -->
-                <div class="p-6 flex-1 flex flex-col">
-                    <div class="mb-6">
-                        <h3 class="text-xl font-bold text-gray-800 leading-relaxed mb-4">
-                            ${titleIcon}${currentQuiz.type === 'rearrange' ? '請重組句子：' : currentQuiz.question}
-                        </h3>
-                        ${inputAreaHTML}
+                    <div class="bg-gray-50 px-6 py-4 flex justify-between items-center">
+                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium transition flex items-center gap-1">
+                            開始學習 <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                        <button class="text-gray-400 hover:text-yellow-500 transition">
+                            <i class="fa-regular fa-star"></i>
+                        </button>
                     </div>
                 </div>
             `;
+        }
+
+        function getTopicName(topic) {
+            const map = {
+                'life': '日常生活',
+                'travel': '旅遊交通',
+                'school': '校園學習',
+                'work': '工作社交'
+            };
+            return map[topic] || '其他';
+        }
+
+        // Render Logic
+        function renderLessons(lessons) {
+            lessonGrid.innerHTML = '';
             
-            // 重新渲染圖標
-            lucide.createIcons();
-            
-            // 如果是填空題，恢復之前的輸入(如果有)
-            if(currentQuiz.type === 'fill' && document.getElementById('fill-input')) {
-                // document.getElementById('fill-input').focus();
-            }
-        }
-
-        // 處理重組題點擊
-        function handleRearrangeClick(word) {
-            userAnswer = userAnswer ? userAnswer + word : word;
-            // 從可選詞中移除
-            rearrangeWords = rearrangeWords.filter(w => w !== word);
-            renderGame();
-        }
-
-        // 重置重組題
-        function resetRearrange() {
-            const currentQuiz = quizData[currentQIndex];
-            userAnswer = '';
-            rearrangeWords = [...currentQuiz.words];
-            renderGame();
-        }
-
-        // 處理填空題提交
-        function handleFillAnswer() {
-            const input = document.getElementById('fill-input');
-            handleAnswer(input.value.trim());
-        }
-
-        // 處理回答邏輯
-        function handleAnswer(answer) {
-            const currentQuiz = quizData[currentQIndex];
-            let isCorrect = false;
-
-            if (currentQuiz.type === 'choice') {
-                isCorrect = answer === currentQuiz.answer;
-            } else if (currentQuiz.type === 'fill') {
-                isCorrect = answer === currentQuiz.answer || (currentQuiz.accept && currentQuiz.accept.includes(answer));
-            } else if (currentQuiz.type === 'rearrange') {
-                // 移除標點符號進行比較
-                const cleanUser = answer.replace(/[，。、]/g, '');
-                const cleanAns = currentQuiz.answer.replace(/[，。、]/g, '');
-                isCorrect = cleanUser === cleanAns;
-            }
-
-            if (isCorrect) {
-                score += 10;
-                showFeedback('correct', '太棒了！答對了！ ' + currentQuiz.explanation);
+            if (lessons.length === 0) {
+                noResults.classList.remove('hidden');
             } else {
-                showFeedback('wrong', `哎呀！正確答案是「${currentQuiz.answer}」。 ${currentQuiz.explanation}`);
+                noResults.classList.add('hidden');
+                lessons.forEach(lesson => {
+                    lessonGrid.innerHTML += createLessonCard(lesson);
+                });
             }
         }
 
-        // 顯示回饋 Modal
-        function showFeedback(type, msg) {
-            // 先移除可能存在的舊 Modal (安全檢查)
-            const existingModal = document.getElementById('feedback-modal');
-            if (existingModal) existingModal.remove();
+        // Filter Logic
+        function filterLessons() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const topicValue = topicFilter.value;
 
-            const modal = document.createElement('div');
-            modal.id = "feedback-modal"; // 加入 ID 以便移除
-            modal.className = "absolute inset-0 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-8 z-20 animate-fade-in";
-            
-            const icon = type === 'correct' ? '🎉' : '🤔';
-            const titleColor = type === 'correct' ? 'text-green-600' : 'text-red-500';
-            const titleText = type === 'correct' ? '答對了！' : '差一點點！';
-            const animation = type === 'correct' ? 'animate-bounce-slow' : 'animate-shake';
+            const filtered = lessonsData.filter(lesson => {
+                // Topic Match
+                const topicMatch = topicValue === 'all' || lesson.topic === topicValue;
+                
+                // Search Match (Title, Grammar patterns, Description)
+                const searchMatch = 
+                    lesson.title.toLowerCase().includes(searchTerm) ||
+                    lesson.desc.toLowerCase().includes(searchTerm) ||
+                    lesson.id.toString() === searchTerm ||
+                    lesson.grammar.some(g => g.pattern.toLowerCase().includes(searchTerm));
 
-            modal.innerHTML = `
-                <div class="text-6xl mb-4 ${animation}">${icon}</div>
-                <h3 class="text-2xl font-bold mb-2 ${titleColor}">${titleText}</h3>
-                <p class="text-gray-600 text-center mb-8 leading-relaxed max-w-xs text-lg">
-                    ${msg}
-                </p>
-                <button onclick="nextQuestion()" class="px-8 py-3 bg-gray-800 text-white rounded-full font-bold text-lg hover:bg-gray-900 transition flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                    下一題 <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                </button>
-            `;
-            
-            container.appendChild(modal);
-            lucide.createIcons();
+                return topicMatch && searchMatch;
+            });
+
+            renderLessons(filtered);
         }
 
-        // 下一題
-        function nextQuestion() {
-            // 移除回饋視窗
-            const modal = document.getElementById('feedback-modal');
-            if (modal) {
-                modal.remove();
-            }
+        // Event Listeners
+        searchInput.addEventListener('input', filterLessons);
+        topicFilter.addEventListener('change', filterLessons);
 
-            if (currentQIndex < quizData.length - 1) {
-                currentQIndex++;
-                userAnswer = ''; // 重置用戶答案
-                rearrangeWords = [];
-                renderGame();
-            } else {
-                renderResult();
-            }
-        }
-
-        // 渲染：結果畫面
-        function renderResult() {
-            container.className = "bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden border-4 border-green-100 mx-auto p-8 text-center";
-            
-            let message = '';
-            let msgClass = '';
-            if (score === 100) {
-                message = '太厲害了！語法大師！🏆';
-                msgClass = 'bg-yellow-100 text-yellow-700';
-            } else if (score >= 60) {
-                message = '做得不錯！繼續加油！✨';
-                msgClass = 'bg-green-100 text-green-700';
-            } else {
-                message = '再試一次會更好！💪';
-                msgClass = 'bg-pink-100 text-pink-700';
-            }
-
-            appContent.innerHTML = `
-                <div class="flex flex-col items-center justify-center h-full">
-                    <i data-lucide="trophy" class="w-24 h-24 text-yellow-400 mx-auto mb-6 fill-current"></i>
-                    <h2 class="text-3xl font-bold text-gray-700 mb-2">挑戰完成！</h2>
-                    <p class="text-gray-500 mb-6">你的馬卡龍語法分數</p>
-                    
-                    <div class="text-6xl font-black text-pink-500 mb-8 drop-shadow-sm">
-                        ${score}<span class="text-2xl text-gray-400 ml-2">/ 100</span>
-                    </div>
-
-                    <div class="mb-8">
-                        <span class="${msgClass} px-4 py-2 rounded-lg text-lg font-bold block w-full shadow-sm">${message}</span>
-                    </div>
-
-                    <button onclick="init()" class="w-full bg-green-400 hover:bg-green-500 text-white text-xl font-bold py-4 rounded-2xl shadow-lg transform transition hover:scale-105 flex items-center justify-center gap-2">
-                        <i data-lucide="refresh-cw" class="w-6 h-6"></i>
-                        再玩一次
-                    </button>
-                </div>
-            `;
-            lucide.createIcons();
-        }
-
-        // 啟動應用
-        init();
+        // Initial Render
+        renderLessons(lessonsData);
 
     </script>
 </body>
